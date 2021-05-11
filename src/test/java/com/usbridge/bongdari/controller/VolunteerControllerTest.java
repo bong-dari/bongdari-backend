@@ -19,4 +19,10 @@ class VolunteerControllerTest {
         mockMvc.perform(get("/api/volunteer/1"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void 봉사공고가져오기_실패() throws Exception {
+        mockMvc.perform(get("/api/volunteer/10000"))
+                .andExpect(status().isBadRequest());
+    }
 }
