@@ -1,14 +1,17 @@
 package com.usbridge.bongdari.model;
 
 import com.usbridge.bongdari.model.enums.Category;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Data
 @Entity
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,4 +28,8 @@ public class Board {
     private String details;
 
     private Category category;
+
+    @ManyToOne
+    @Column(name = "member_id")
+    private Member member;
 }
