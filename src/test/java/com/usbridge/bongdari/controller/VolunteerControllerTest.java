@@ -5,6 +5,7 @@ import com.usbridge.bongdari.controller.dto.VolunteerDto;
 import com.usbridge.bongdari.model.Volunteer;
 import com.usbridge.bongdari.model.enums.Gender;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -42,7 +43,8 @@ class VolunteerControllerTest {
     }
 
     @Test
-    public void 봉사공고등록() throws Exception {
+    @DisplayName("정상적으로 공고 등록")
+    public void createVolunteer() throws Exception {
         VolunteerDto volunteerDto = VolunteerDto.builder()
                 .title("봉사 활동")
                 .details("봉사하기")
@@ -65,7 +67,8 @@ class VolunteerControllerTest {
     }
 
     @Test
-    public void 봉사공고등록_불필요한입력값() throws Exception {
+    @DisplayName("입력 받을 수 없는 값을 사용한 경우에 에러가 발생하는 공고 등록 테스트")
+    public void createVolunteer_Bad_Request_Wrong_Input() throws Exception {
         Volunteer volunteer = Volunteer.builder()
                 .id(50L)
                 .title("봉사 활동")
