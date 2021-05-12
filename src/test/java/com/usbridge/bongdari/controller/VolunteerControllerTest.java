@@ -3,15 +3,22 @@ package com.usbridge.bongdari.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.usbridge.bongdari.model.Volunteer;
 import com.usbridge.bongdari.model.enums.Gender;
+import com.usbridge.bongdari.repository.VolunteerRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.time.LocalDate;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -26,6 +33,17 @@ class VolunteerControllerTest {
 
     @Autowired
     ObjectMapper objectMapper;
+
+    @MockBean
+    VolunteerRepository volunteerRepository;
+
+    @BeforeEach
+    void before(WebApplicationContext was) {
+        mockMvc = MockMvcBuilders.webAppContextSetup(was)
+                .alwaysDo(print())
+                .addFilters(new CharacterEncodingFilter("UTF-8", true))
+                .build();
+    }
 
     @Test
     public void 봉사공고등록() throws Exception {
@@ -44,12 +62,13 @@ class VolunteerControllerTest {
                 .createdDate(LocalDate.now())
                 .build();
 
+        when(volunteerRepository.save(volunteer)).thenReturn(volunteer);
+
         mockMvc.perform(post("/api/volunteer")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaTypes.HAL_JSON)
                 .content(objectMapper.writeValueAsString(volunteer)))
-                .andDo(print())
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("id").exists());
     }
 
