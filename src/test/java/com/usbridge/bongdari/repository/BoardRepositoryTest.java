@@ -4,13 +4,13 @@ import com.usbridge.bongdari.exception.ResourceNotFoundException;
 import com.usbridge.bongdari.model.Board;
 import com.usbridge.bongdari.model.Member;
 import com.usbridge.bongdari.model.enums.Category;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,10 +23,10 @@ public class BoardRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
 
-    @AfterEach
-    public void cleanUp(){
-        boardRepository.deleteAll();
-    }
+//    @AfterEach
+//    public void cleanUp(){
+//        boardRepository.deleteAll();
+//    }
 
     @Test
     @DisplayName("게시판저장_불러오기")
@@ -37,11 +37,12 @@ public class BoardRepositoryTest {
         String details = "봉사활동 게시판 테스트 입니다.";
         LocalDate startDate = LocalDate.of(2021, 5, 20);
         LocalDate endDate = LocalDate.of(2021, 5, 30);
-        LocalDate createdDate = LocalDate.now();
+        LocalDateTime createdDate = LocalDateTime.now();
         String city = "서울시";
         String gu = "강동구";
 
-        Member member = memberRepository.findById((long)1).orElseThrow(ResourceNotFoundException::new);
+        Member member = memberRepository.findById((long)1).orElseThrow(() ->
+                new ResourceNotFoundException("회원을 찾을 수 없습니다. id = " + (long)1));
 
         boardRepository.save(Board.builder()
                 .id(null)
@@ -66,7 +67,6 @@ public class BoardRepositoryTest {
         assertThat(board.getDetails()).isEqualTo(details);
         assertThat(board.getStartDate()).isEqualTo(startDate);
         assertThat(board.getEndDate()).isEqualTo(endDate);
-        assertThat(board.getCreatedDate()).isEqualTo(createdDate);
         assertThat(board.getCity()).isEqualTo(city);
         assertThat(board.getGu()).isEqualTo(gu);
     }
