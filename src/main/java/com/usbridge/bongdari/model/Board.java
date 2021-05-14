@@ -2,16 +2,18 @@ package com.usbridge.bongdari.model;
 
 import com.usbridge.bongdari.model.enums.Category;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
+@Builder
 @Data
-@Entity
 @RequiredArgsConstructor
 @AllArgsConstructor
+@Entity
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +32,6 @@ public class Board {
     private Category category;
 
     @ManyToOne
-    @Column(name = "member_id")
+    @JoinColumn(name = "member_id")
     private Member member;
 }
