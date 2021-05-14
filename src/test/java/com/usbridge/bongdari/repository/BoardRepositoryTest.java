@@ -35,8 +35,11 @@ public class BoardRepositoryTest {
         Category category = Category.TOWN;
         String contact = "01066075331";
         String details = "봉사활동 게시판 테스트 입니다.";
-        LocalDate startDate = LocalDate.now();
-        LocalDate endDate = LocalDate.of(2021, 5, 16);
+        LocalDate startDate = LocalDate.of(2021, 5, 20);
+        LocalDate endDate = LocalDate.of(2021, 5, 30);
+        LocalDate createdDate = LocalDate.now();
+        String city = "서울시";
+        String gu = "강동구";
 
         Member member = memberRepository.findById((long)1).orElseThrow(ResourceNotFoundException::new);
 
@@ -49,6 +52,9 @@ public class BoardRepositoryTest {
                 .startDate(startDate)
                 .endDate(endDate)
                 .member(member)
+                .createdDate(createdDate)
+                .city(city)
+                .gu(gu)
                 .build());
 
         List<Board> boardList = boardRepository.findAll();
@@ -60,5 +66,8 @@ public class BoardRepositoryTest {
         assertThat(board.getDetails()).isEqualTo(details);
         assertThat(board.getStartDate()).isEqualTo(startDate);
         assertThat(board.getEndDate()).isEqualTo(endDate);
+        assertThat(board.getCreatedDate()).isEqualTo(createdDate);
+        assertThat(board.getCity()).isEqualTo(city);
+        assertThat(board.getGu()).isEqualTo(gu);
     }
 }
