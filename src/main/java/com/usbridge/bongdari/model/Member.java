@@ -2,6 +2,10 @@ package com.usbridge.bongdari.model;
 
 import com.usbridge.bongdari.model.enums.Gender;
 import com.usbridge.bongdari.model.enums.SNS;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,7 +13,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDate;
 
+@Builder
+@Data
 @Entity
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
