@@ -27,6 +27,8 @@ public class Board {
 
     private LocalDate endDate;
 
+    private LocalDate createdDate;
+
     private String details;
 
     private Category category;
