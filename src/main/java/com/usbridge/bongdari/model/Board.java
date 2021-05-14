@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Builder
 @Data
@@ -27,7 +28,7 @@ public class Board {
 
     private LocalDate endDate;
 
-    private LocalDate createdDate;
+    private LocalDateTime createdDate;
 
     private String details;
 
