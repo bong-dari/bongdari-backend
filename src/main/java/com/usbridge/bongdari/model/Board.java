@@ -31,6 +31,10 @@ public class Board {
 
     private String details;
 
+    private String city;
+
+    private String gu;
+
     private Category category;
 
     @ManyToOne
