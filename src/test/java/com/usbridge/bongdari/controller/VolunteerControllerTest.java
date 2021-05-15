@@ -90,4 +90,15 @@ class VolunteerControllerTest {
                 .content(objectMapper.writeValueAsString(volunteer)))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    public void createVolunteer_Bad_Request_Empty_Input() throws Exception {
+        VolunteerDto volunteerDto = VolunteerDto.builder().build();
+
+        mockMvc.perform(post("/api/volunteer")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaTypes.HAL_JSON)
+                .content(objectMapper.writeValueAsString(volunteerDto)))
+                .andExpect(status().isBadRequest());
+    }
 }
