@@ -9,10 +9,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class BoardService {
@@ -27,7 +29,6 @@ public class BoardService {
         return boardPageToBoardResponseDtoPage(boardPage, pageable);
     }
 
-//    @Transactional
 //    public Long saveBoard(BoardSaveRequestDto requestDto){
 ////        return boardRepository.save(requestDto.toEntity()).getId();
 //        return null;
