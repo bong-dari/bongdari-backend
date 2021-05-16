@@ -17,7 +17,8 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/board/{category_id}")
-    public Page<BoardResponseDto> getBoardList(@PathVariable int category_id, @RequestParam(defaultValue = "서울시", required = false) String city,
+    public Page<BoardResponseDto> getBoardList(@PathVariable int category_id,
+                                               @RequestParam(defaultValue = "서울시", required = false) String city,
                                                @RequestParam(required = false) String gu, @PageableDefault(size = 10) Pageable pageable){
         return boardService.findByCategory(category_id, city, gu, pageable);
     }
