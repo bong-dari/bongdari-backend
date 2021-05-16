@@ -39,26 +39,11 @@ public class BoardService {
         List<BoardResponseDto> dtoList = new ArrayList<>();
 
         for (Board board : boardList) {
-            dtoList.add(boardToBoardResponseDto(board));
+            dtoList.add(new BoardResponseDto(board));
         }
 
         int start = (int)pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), dtoList.size());
         return new PageImpl<>(dtoList.subList(start, end), pageable, dtoList.size());
-    }
-
-    private BoardResponseDto boardToBoardResponseDto(Board board){
-        return BoardResponseDto.builder()
-                .nickname(board.getMember().getNickname())
-                .contact(board.getContact())
-                .category(board.getCategory())
-                .details(board.getDetails())
-                .startDate(board.getStartDate())
-                .endDate(board.getEndDate())
-                .createdDate(board.getCreatedDate())
-                .capacity(board.getCapacity())
-                .city(board.getCity())
-                .gu(board.getGu())
-                .build();
     }
 }
