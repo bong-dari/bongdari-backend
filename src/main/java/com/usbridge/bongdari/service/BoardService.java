@@ -21,7 +21,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
-    public Page<BoardResponseDto> findByCategory(int category_id, String city, String gu, Pageable pageable){
+    public Page<BoardResponseDto> findByCategoryAndAddress(int category_id, String city, String gu, Pageable pageable){
         Page<Board> boardPage = gu == null ?
                 boardRepository.findByCategoryAndCity(Category.values()[category_id], city, pageable) :
                 boardRepository.findByCategoryAndCityAndGu(Category.values()[category_id], city, gu, pageable);
