@@ -1,7 +1,49 @@
 package com.usbridge.bongdari.service;
 
+import com.usbridge.bongdari.controller.dto.BoardResponseDto;
+import com.usbridge.bongdari.model.Board;
+import com.usbridge.bongdari.model.enums.Category;
+import com.usbridge.bongdari.repository.BoardRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Transactional
+@RequiredArgsConstructor
 @Service
 public class BoardService {
+
+    private final BoardRepository boardRepository;
+
+    public Page<BoardResponseDto> findByCategoryAndAddress(int category_id, String city, String gu, Pageable pageable){
+        Page<Board> boardPage = gu == null ?
+                boardRepository.findByCategoryAndCity(Category.values()[category_id], city, pageable) :
+                boardRepository.findByCategoryAndCityAndGu(Category.values()[category_id], city, gu, pageable);
+        System.out.println("Page List : " + boardPage.toList());
+        return boardPageToBoardResponseDtoPage(boardPage, pageable);
+    }
+
+//    public Long saveBoard(BoardSaveRequestDto requestDto){
+////        return boardRepository.save(requestDto.toEntity()).getId();
+//        return null;
+//    }
+
+    private Page<BoardResponseDto> boardPageToBoardResponseDtoPage(Page<Board> boardPage, Pageable pageable){
+        List<Board> boardList = boardPage.toList();
+        List<BoardResponseDto> dtoList = new ArrayList<>();
+
+        for (Board board : boardList) {
+            dtoList.add(new BoardResponseDto(board));
+        }
+
+        int start = (int)pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), dtoList.size());
+        return new PageImpl<>(dtoList.subList(start, end), pageable, dtoList.size());
+    }
 }
