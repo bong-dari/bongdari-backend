@@ -25,6 +25,7 @@ public class BoardService {
         Page<Board> boardPage = gu == null ?
                 boardRepository.findByCategoryAndCity(Category.values()[category_id], city, pageable) :
                 boardRepository.findByCategoryAndCityAndGu(Category.values()[category_id], city, gu, pageable);
+        System.out.println("Page List : " + boardPage.toList());
         return boardPageToBoardResponseDtoPage(boardPage, pageable);
     }
 
