@@ -4,8 +4,11 @@ import com.usbridge.bongdari.controller.dto.VolunteerDto;
 import com.usbridge.bongdari.model.Volunteer;
 import com.usbridge.bongdari.service.VolunteerService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +23,8 @@ public class VolunteerController {
 
     private final VolunteerService volunteerService;
 
+    private final ModelMapper modelMapper;
+
     @PostMapping("/volunteer")
     public ResponseEntity<Volunteer> createVolunteer(@RequestBody @Valid VolunteerDto volunteerDto, Errors errors) {
         if (errors.hasErrors()) {
@@ -27,5 +32,16 @@ public class VolunteerController {
         }
 
         return ResponseEntity.ok().body(volunteerService.createVolunteer(volunteerDto));
+    }
+
+    @GetMapping("/volunteer/{id}")
+    public ResponseEntity<VolunteerDto> getVolunteer(@PathVariable Long id) {
+        Volunteer volunteer = volunteerService.findVolunteerById(id);
+
+        if (volunteer == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(modelMapper.map(volunteer, VolunteerDto.class));
     }
 }
