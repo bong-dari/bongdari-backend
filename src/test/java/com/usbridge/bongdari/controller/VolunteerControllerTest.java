@@ -81,6 +81,7 @@ class VolunteerControllerTest {
     }
 
     @Test
+    @DisplayName("비어 있는 값 입력")
     public void createVolunteer_Bad_Request_Empty_Input() throws Exception {
         VolunteerDto volunteerDto = VolunteerDto.builder().build();
 
