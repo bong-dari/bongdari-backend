@@ -8,3 +8,4 @@ insert into member(id, nickname, name, sms_agreement, birth_date, contact, creat
     null, 'jwl3', '삼정우', 3, '1991-03-01', '01066075331', '2021-05-15', 'ljw1@gmail.com', 1, false, 1
 );
 
+
