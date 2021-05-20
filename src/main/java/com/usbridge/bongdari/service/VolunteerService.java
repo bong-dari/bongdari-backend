@@ -21,10 +21,8 @@ public class VolunteerService {
         return volunteerRepository.save(volunteer);
     }
 
-    public VolunteerDto findVolunteerById(Long id) {
-        Volunteer volunteer = volunteerRepository.findById(id).orElseThrow(() -> new RuntimeException("존재하지 않는 봉사활동 공고입니다."));
-
-        return modelMapper.map(volunteer, VolunteerDto.class);
+    public Volunteer findVolunteerById(Long id) {
+        return volunteerRepository.findById(id).orElse(null);
     }
 
 }
