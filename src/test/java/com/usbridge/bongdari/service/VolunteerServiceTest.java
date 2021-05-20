@@ -12,6 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -49,6 +51,28 @@ class VolunteerServiceTest {
 
         Volunteer volunteer = volunteerService.findVolunteerById(100L);
 
+        assertThat(volunteer).isNull();
+    }
+
+    @Test
+    @DisplayName("봉사공고 삭제")
+    public void deleteVolunteer() {
+        when(volunteerService.deleteVolunteerById(1L)).thenReturn(mockVolunteer());
+
+        Volunteer volunteer = volunteerService.deleteVolunteerById(1L);
+
+        verify(volunteerService, times(1)).deleteVolunteerById(1L);
+        assertThat(volunteer).isNotNull();
+    }
+
+    @Test
+    @DisplayName("없는 봉사공고 삭제 404")
+    public void deleteVolunteer_Not_Exist() {
+        when(volunteerService.deleteVolunteerById(6545423L)).thenReturn(null);
+
+        Volunteer volunteer = volunteerService.deleteVolunteerById(6545423L);
+
+        verify(volunteerService, times(1)).deleteVolunteerById(6545423L);
         assertThat(volunteer).isNull();
     }
 
