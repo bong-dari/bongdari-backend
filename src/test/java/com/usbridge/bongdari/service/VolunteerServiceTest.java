@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,11 +24,34 @@ class VolunteerServiceTest {
     @Test
     @DisplayName("봉사공고 등록")
     public void createVolunteer() {
-        when(volunteerService.createVolunteer(givenVolunteerDto())).thenReturn(mockVolunteer());
+        when(volunteerService.createVolunteer(mockVolunteerDto())).thenReturn(mockVolunteer());
 
-        Volunteer volunteer = volunteerService.createVolunteer(givenVolunteerDto());
+        Volunteer volunteer = volunteerService.createVolunteer(mockVolunteerDto());
 
         assertThat(volunteer.getId()).isEqualTo(50);
+    }
+
+    @Test
+    @DisplayName("봉사공고 상세보기")
+    public void findVolunteer() {
+        when(volunteerService.findVolunteerById(50L)).thenReturn(mockVolunteerDto());
+
+        VolunteerDto volunteerDto = volunteerService.findVolunteerById(50L);
+
+        assertThat(volunteerDto.getTitle()).isEqualTo("봉사 활동");
+        assertThat(volunteerDto.getDetails()).isEqualTo("봉사하기");
+        assertThat(volunteerDto.getTime()).isEqualTo("오전10시부터");
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 봉사공고 조회")
+    public void findVolunteer_Not_Exist_Volunteer() {
+        when(volunteerService.findVolunteerById(100L)).thenThrow(new RuntimeException("존재하지 않는 봉사활동 공고입니다."));
+
+        RuntimeException runtimeException = assertThrows(RuntimeException.class,
+                () -> volunteerService.findVolunteerById(100L));
+
+        assertThat(runtimeException.getMessage()).isEqualTo("존재하지 않는 봉사활동 공고입니다.");
     }
 
     private Volunteer mockVolunteer() {
@@ -47,7 +71,7 @@ class VolunteerServiceTest {
                 .build();
     }
 
-    private VolunteerDto givenVolunteerDto() {
+    private VolunteerDto mockVolunteerDto() {
         return VolunteerDto.builder()
                 .title("봉사 활동")
                 .details("봉사하기")
