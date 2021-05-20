@@ -19,6 +19,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.time.LocalDate;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -114,6 +115,26 @@ class VolunteerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaTypes.HAL_JSON))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("봉사공고 삭제하기")
+    public void deleteVolunteer() throws Exception {
+        mockMvc.perform(delete("/api/volunteer/1")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaTypes.HAL_JSON))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 봉사공고 삭제요청 404")
+    public void deleteVolunteer_Not_Exist_404() throws Exception {
+        mockMvc.perform(delete("/api/volunteer/15674")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaTypes.HAL_JSON))
+                .andExpect(status().isNotFound());
+
     }
 
     private VolunteerDto givenVolunteerDto() {
