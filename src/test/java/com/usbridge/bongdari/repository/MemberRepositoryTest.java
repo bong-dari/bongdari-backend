@@ -26,7 +26,7 @@ public class MemberRepositoryTest {
                 .contact("01066075331")
                 .createdDate(LocalDate.now())
                 .email("ljwljw@gmail.com")
-                .gender(Gender.MEN)
+                .gender(Gender.MALE)
                 .isDeleted(false)
                 .sns(SNS.KAKAO)
                 .build());
