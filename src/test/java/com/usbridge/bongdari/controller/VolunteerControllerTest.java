@@ -19,6 +19,8 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.time.LocalDate;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -45,18 +47,7 @@ class VolunteerControllerTest {
     @Test
     @DisplayName("정상적으로 공고 등록")
     public void createVolunteer() throws Exception {
-        VolunteerDto volunteerDto = VolunteerDto.builder()
-                .title("봉사 활동")
-                .details("봉사하기")
-                .time("오전10시부터")
-                .contact("010-1234-5678")
-                .capacity(10)
-                .gender(Gender.ALL)
-                .location("마포구")
-                .manager("이재복")
-                .startDate(LocalDate.of(2050, 5, 1))
-                .endDate(LocalDate.of(2020, 5, 10))
-                .build();
+        VolunteerDto volunteerDto = givenVolunteerDto();
 
         mockMvc.perform(post("/api/volunteer")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -92,6 +83,7 @@ class VolunteerControllerTest {
     }
 
     @Test
+    @DisplayName("비어 있는 값 입력")
     public void createVolunteer_Bad_Request_Empty_Input() throws Exception {
         VolunteerDto volunteerDto = VolunteerDto.builder().build();
 
@@ -100,5 +92,63 @@ class VolunteerControllerTest {
                 .accept(MediaTypes.HAL_JSON)
                 .content(objectMapper.writeValueAsString(volunteerDto)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("봉사공고 조회하기")
+    public void findVolunteer() throws Exception {
+        mockMvc.perform(get("/api/volunteer/1")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaTypes.HAL_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("title").exists())
+                .andExpect(jsonPath("gender").exists())
+                .andExpect(jsonPath("time").exists())
+                .andExpect(jsonPath("capacity").exists())
+                .andExpect(jsonPath("location").exists());
+    }
+
+    @Test
+    @DisplayName("없는 봉사공고 조회하기 404")
+    public void findVolunteer_404() throws Exception {
+        mockMvc.perform(get("/api/volunteer/16234")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaTypes.HAL_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("봉사공고 삭제하기")
+    public void deleteVolunteer() throws Exception {
+        mockMvc.perform(delete("/api/volunteer/1")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaTypes.HAL_JSON))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 봉사공고 삭제요청 400")
+    public void deleteVolunteer_Not_Exist_400() throws Exception {
+        mockMvc.perform(delete("/api/volunteer/15674")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaTypes.HAL_JSON))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    private VolunteerDto givenVolunteerDto() {
+        return VolunteerDto.builder()
+                .title("봉사 활동")
+                .details("봉사하기")
+                .time("오전10시부터")
+                .contact("010-1234-5678")
+                .capacity(10)
+                .gender(Gender.ALL)
+                .location("마포구")
+                .manager("이재복")
+                .startDate(LocalDate.of(2050, 5, 1))
+                .endDate(LocalDate.of(2020, 5, 10))
+                .build();
     }
 }
