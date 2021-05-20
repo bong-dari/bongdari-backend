@@ -12,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,12 +45,11 @@ class VolunteerServiceTest {
     @Test
     @DisplayName("존재하지 않는 봉사공고 조회")
     public void findVolunteer_Not_Exist_Volunteer() {
-        when(volunteerService.findVolunteerById(100L)).thenThrow(new RuntimeException("존재하지 않는 봉사활동 공고입니다."));
+        when(volunteerService.findVolunteerById(100L)).thenReturn(null);
 
-        RuntimeException runtimeException = assertThrows(RuntimeException.class,
-                () -> volunteerService.findVolunteerById(100L));
+        Volunteer volunteer = volunteerService.findVolunteerById(100L);
 
-        assertThat(runtimeException.getMessage()).isEqualTo("존재하지 않는 봉사활동 공고입니다.");
+        assertThat(volunteer).isNull();
     }
 
     private Volunteer mockVolunteer() {
