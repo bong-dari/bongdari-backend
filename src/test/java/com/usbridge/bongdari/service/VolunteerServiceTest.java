@@ -34,13 +34,13 @@ class VolunteerServiceTest {
     @Test
     @DisplayName("봉사공고 상세보기")
     public void findVolunteer() {
-        when(volunteerService.findVolunteerById(50L)).thenReturn(mockVolunteerDto());
+        when(volunteerService.findVolunteerById(50L)).thenReturn(mockVolunteer());
 
-        VolunteerDto volunteerDto = volunteerService.findVolunteerById(50L);
+        Volunteer volunteer = volunteerService.findVolunteerById(50L);
 
-        assertThat(volunteerDto.getTitle()).isEqualTo("봉사 활동");
-        assertThat(volunteerDto.getDetails()).isEqualTo("봉사하기");
-        assertThat(volunteerDto.getTime()).isEqualTo("오전10시부터");
+        assertThat(volunteer.getTitle()).isEqualTo("봉사 활동");
+        assertThat(volunteer.getDetails()).isEqualTo("봉사하기");
+        assertThat(volunteer.getTime()).isEqualTo("오전10시부터");
     }
 
     @Test
