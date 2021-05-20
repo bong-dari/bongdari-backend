@@ -25,4 +25,15 @@ public class VolunteerService {
         return volunteerRepository.findById(id).orElse(null);
     }
 
+    public Volunteer deleteVolunteerById(Long id) {
+        Volunteer volunteer = volunteerRepository.findById(id).orElse(null);
+
+        if (volunteer == null) {
+            return null;
+        }
+
+        volunteerRepository.delete(volunteer);
+
+        return volunteer;
+    }
 }
