@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,6 +41,17 @@ public class VolunteerController {
 
         if (volunteer == null) {
             return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(modelMapper.map(volunteer, VolunteerDto.class));
+    }
+
+    @DeleteMapping("/volunteer/{id}")
+    public ResponseEntity<VolunteerDto> deleteVolunteer(@PathVariable Long id) {
+        Volunteer volunteer = volunteerService.deleteVolunteerById(id);
+
+        if (volunteer == null) {
+            return ResponseEntity.badRequest().build();
         }
 
         return ResponseEntity.ok(modelMapper.map(volunteer, VolunteerDto.class));
