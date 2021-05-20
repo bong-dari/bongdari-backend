@@ -36,6 +36,7 @@ public class Board {
 
     private String gu;
 
+    @Enumerated(EnumType.STRING)
     private Category category;
 
     @ManyToOne

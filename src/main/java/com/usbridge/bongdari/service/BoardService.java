@@ -1,9 +1,13 @@
 package com.usbridge.bongdari.service;
 
+import com.usbridge.bongdari.controller.dto.BoardRequestDto;
 import com.usbridge.bongdari.controller.dto.BoardResponseDto;
+import com.usbridge.bongdari.exception.ResourceNotFoundException;
 import com.usbridge.bongdari.model.Board;
+import com.usbridge.bongdari.model.Member;
 import com.usbridge.bongdari.model.enums.Category;
 import com.usbridge.bongdari.repository.BoardRepository;
+import com.usbridge.bongdari.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,18 +25,21 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
-    public Page<BoardResponseDto> findByCategoryAndAddress(int category_id, String city, String gu, Pageable pageable){
+    private final MemberRepository memberRepository;
+
+    public Page<BoardResponseDto> findByCategoryAndAddress(Category category, String city, String gu, Pageable pageable){
+        // 나중에 QueryDSL로 변경해야함
         Page<Board> boardPage = gu == null ?
-                boardRepository.findByCategoryAndCity(Category.values()[category_id], city, pageable) :
-                boardRepository.findByCategoryAndCityAndGu(Category.values()[category_id], city, gu, pageable);
-        System.out.println("Page List : " + boardPage.toList());
+                boardRepository.findByCategoryAndCity(category, city, pageable) :
+                boardRepository.findByCategoryAndCityAndGu(category, city, gu, pageable);
         return boardPageToBoardResponseDtoPage(boardPage, pageable);
     }
 
-//    public Long saveBoard(BoardSaveRequestDto requestDto){
-////        return boardRepository.save(requestDto.toEntity()).getId();
-//        return null;
-//    }
+    public Board createBoard(Long exToken, BoardRequestDto dto){
+        // 인증 기능 완성되면 토큰받아 멤버 불러오는 코드 추가 예정
+        Member member = memberRepository.findById(exToken).orElseThrow(() -> new ResourceNotFoundException("해당 id의 회원정보가 존재하지 않습니다."));
+        return boardRepository.save(dto.toEntity(member));
+    }
 
     private Page<BoardResponseDto> boardPageToBoardResponseDtoPage(Page<Board> boardPage, Pageable pageable){
         List<Board> boardList = boardPage.toList();
