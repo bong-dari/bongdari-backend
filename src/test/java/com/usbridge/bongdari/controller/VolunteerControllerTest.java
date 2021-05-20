@@ -128,12 +128,12 @@ class VolunteerControllerTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 봉사공고 삭제요청 404")
-    public void deleteVolunteer_Not_Exist_404() throws Exception {
+    @DisplayName("존재하지 않는 봉사공고 삭제요청 400")
+    public void deleteVolunteer_Not_Exist_400() throws Exception {
         mockMvc.perform(delete("/api/volunteer/15674")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaTypes.HAL_JSON))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
 
     }
 
