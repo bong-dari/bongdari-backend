@@ -19,6 +19,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.time.LocalDate;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -90,6 +91,29 @@ class VolunteerControllerTest {
                 .accept(MediaTypes.HAL_JSON)
                 .content(objectMapper.writeValueAsString(volunteerDto)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("봉사공고 조회하기")
+    public void findVolunteer() throws Exception {
+        mockMvc.perform(get("/api/volunteer/1")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaTypes.HAL_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("title").exists())
+                .andExpect(jsonPath("gender").exists())
+                .andExpect(jsonPath("time").exists())
+                .andExpect(jsonPath("capacity").exists())
+                .andExpect(jsonPath("location").exists());
+    }
+
+    @Test
+    @DisplayName("없는 봉사공고 조회하기 404")
+    public void findVolunteer_404() throws Exception {
+        mockMvc.perform(get("/api/volunteer/16234")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaTypes.HAL_JSON))
+                .andExpect(status().isNotFound());
     }
 
     private VolunteerDto givenVolunteerDto() {
