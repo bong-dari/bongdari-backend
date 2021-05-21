@@ -2,6 +2,7 @@ package com.usbridge.bongdari.service;
 
 import com.usbridge.bongdari.controller.dto.BoardRequestDto;
 import com.usbridge.bongdari.controller.dto.BoardResponseDto;
+import com.usbridge.bongdari.exception.ResourceNotFoundException;
 import com.usbridge.bongdari.model.Board;
 import com.usbridge.bongdari.model.Member;
 import com.usbridge.bongdari.model.enums.Category;
@@ -9,6 +10,7 @@ import com.usbridge.bongdari.model.enums.Gender;
 import com.usbridge.bongdari.model.enums.SNS;
 import com.usbridge.bongdari.repository.BoardRepository;
 import com.usbridge.bongdari.repository.MemberRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,12 +42,23 @@ class BoardServiceTest {
     @Mock
     private MemberRepository memberRepository;
 
-    @DisplayName("게시판 리스트 조회")
+    @DisplayName("게시글 리스트 조회")
     @Test
     void findByCategoryAndAddress() {
-        when(boardRepository.findByCategoryAndCityAndGu(Category.TOWN, "서울시", "강동구", PageRequest.of(0, 2))).thenReturn(givenBoardPage());
+        when(boardRepository.findByCategoryAndCityAndGu(
+                Category.TOWN
+                , "서울시"
+                , "강동구"
+                ,PageRequest.of(0, 2))).thenReturn(givenBoardPage()
+        );
 
-        List<BoardResponseDto> boardPage = boardService.findByCategoryAndAddress(Category.TOWN, "서울시", "강동구", PageRequest.of(0, 2)).toList();
+        List<BoardResponseDto> boardPage =
+                boardService.findByCategoryAndAddress(
+                        Category.TOWN
+                        , "서울시"
+                        , "강동구"
+                        , PageRequest.of(0, 2)
+                ).toList();
 
         for (BoardResponseDto boardResponseDto : boardPage) {
             assertThat(boardResponseDto.getCategory()).isEqualTo(Category.TOWN);
@@ -54,12 +67,13 @@ class BoardServiceTest {
         }
     }
 
-    @DisplayName("위치정보 x 게시판 리스트 조회")
+    @DisplayName("게시글 리스트 조회(위치정보 x)")
     @Test
     void findByCategoryAndCity() {
         when(boardRepository.findByCategoryAndCity(Category.TOWN, "서울시", PageRequest.of(0, 2))).thenReturn(givenBoardPage());
 
-        List<BoardResponseDto> boardPage = boardService.findByCategoryAndAddress(Category.TOWN, "서울시", null, PageRequest.of(0, 2)).toList();
+        List<BoardResponseDto> boardPage =
+                boardService.findByCategoryAndAddress(Category.TOWN, "서울시", null, PageRequest.of(0, 2)).toList();
 
         for(BoardResponseDto boardResponseDto : boardPage){
             assertThat(boardResponseDto.getCategory()).isEqualTo(Category.TOWN);
@@ -67,11 +81,11 @@ class BoardServiceTest {
         }
     }
 
-    @DisplayName("게시판 등록")
+    @DisplayName("게시글 등록")
     @Test
     void createBoard() {
-        when(memberRepository.findById(1L)).thenReturn(givenMember());
-        when(boardService.createBoard(1L, givenBoardRequestDto())).thenReturn(givenBoard());
+        when(memberRepository.findById(1L)).thenReturn(Optional.of(givenMember()));
+        when(boardRepository.save(givenBoardRequestDto().toEntity(givenMember()))).thenReturn(givenBoardRequestDto().toEntity(givenMember()));
 
         Board board = boardService.createBoard(1L, givenBoardRequestDto());
 
@@ -80,6 +94,30 @@ class BoardServiceTest {
         assertThat(board.getCapacity()).isEqualTo(11);
         assertThat(board.getCity()).isEqualTo("경기도");
         assertThat(board.getGu()).isEqualTo("화성시");
+    }
+
+    @DisplayName("게시글 삭제")
+    @Test
+    void deleteBoard() {
+        when(boardRepository.findById(1L)).thenReturn(Optional.of(givenBoard()));
+
+        Board board = boardService.deleteBoardById(1L);
+
+        verify(boardRepository, times(1)).delete(board);
+        assertThat(boardService.deleteBoardById(1L)).isNotNull();
+    }
+
+    @DisplayName("게시글 삭제 (게시글 없음)")
+    @Test
+    void deleteBoard_ResourcesNotFound() {
+        when(boardRepository.findById(1991L)).thenThrow(new ResourceNotFoundException("해당 id의 회원정보가 존재하지 않습니다."));
+        ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> boardService.deleteBoardById(1991L));
+
+        assertThat(exception.getMessage()).isEqualTo("해당 id의 회원정보가 존재하지 않습니다.");
+    }
+
+    private Board givenBoard(){
+        return givenBoardRequestDto().toEntity(Member.builder().id(1L).build());
     }
 
     private BoardRequestDto givenBoardRequestDto() {
@@ -96,8 +134,8 @@ class BoardServiceTest {
                 .build();
     }
 
-    private Optional<Member> givenMember() {
-        return Optional.of(Member.builder()
+    private Member givenMember() {
+        return Member.builder()
                 .id(1L)
                 .name("임정우")
                 .nickname("jeongwoolim")
@@ -109,12 +147,7 @@ class BoardServiceTest {
                 .createdDate(LocalDate.of(2021, 2, 15))
                 .gender(Gender.MALE)
                 .sns(SNS.KAKAO)
-                .build()
-        );
-    }
-
-    private Board givenBoard(){
-        return givenBoardRequestDto().toEntity(Member.builder().id(1L).build());
+                .build();
     }
 
     private List<Board> givenBoardList() {
