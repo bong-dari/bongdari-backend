@@ -41,6 +41,12 @@ public class BoardService {
         return boardRepository.save(dto.toEntity(member));
     }
 
+    public Board deleteBoardById(Long id) {
+        Board board = boardRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("해당 id의 회원정보가 존재하지 않습니다."));
+        boardRepository.delete(board);
+        return board;
+    }
+
     private Page<BoardResponseDto> boardPageToBoardResponseDtoPage(Page<Board> boardPage, Pageable pageable){
         List<Board> boardList = boardPage.toList();
         List<BoardResponseDto> dtoList = new ArrayList<>();
