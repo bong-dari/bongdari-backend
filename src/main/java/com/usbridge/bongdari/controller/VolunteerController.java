@@ -3,6 +3,7 @@ package com.usbridge.bongdari.controller;
 import com.usbridge.bongdari.controller.dto.VolunteerDto;
 import com.usbridge.bongdari.model.Volunteer;
 import com.usbridge.bongdari.service.VolunteerService;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -36,12 +37,8 @@ public class VolunteerController {
     }
 
     @GetMapping("/volunteer/{id}")
-    public ResponseEntity<VolunteerDto> getVolunteer(@PathVariable Long id) {
+    public ResponseEntity<VolunteerDto> getVolunteer(@PathVariable Long id) throws NotFoundException {
         Volunteer volunteer = volunteerService.findVolunteerById(id);
-
-        if (volunteer == null) {
-            return ResponseEntity.notFound().build();
-        }
 
         return ResponseEntity.ok(modelMapper.map(volunteer, VolunteerDto.class));
     }
