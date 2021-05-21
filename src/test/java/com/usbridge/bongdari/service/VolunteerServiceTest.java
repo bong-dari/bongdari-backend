@@ -3,6 +3,8 @@ package com.usbridge.bongdari.service;
 import com.usbridge.bongdari.controller.dto.VolunteerDto;
 import com.usbridge.bongdari.model.Volunteer;
 import com.usbridge.bongdari.model.enums.Gender;
+import exception.BadRequestException;
+import javassist.NotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -34,7 +37,7 @@ class VolunteerServiceTest {
 
     @Test
     @DisplayName("봉사공고 상세보기")
-    public void findVolunteer() {
+    public void findVolunteer() throws NotFoundException {
         when(volunteerService.findVolunteerById(50L)).thenReturn(mockVolunteer());
 
         Volunteer volunteer = volunteerService.findVolunteerById(50L);
@@ -46,17 +49,17 @@ class VolunteerServiceTest {
 
     @Test
     @DisplayName("존재하지 않는 봉사공고 조회")
-    public void findVolunteer_Not_Exist_Volunteer() {
-        when(volunteerService.findVolunteerById(100L)).thenReturn(null);
+    public void findVolunteer_Not_Exist_Volunteer() throws NotFoundException {
+        when(volunteerService.findVolunteerById(100L)).thenThrow(new NotFoundException("존재하지 않는 봉사활동 공고입니다."));
 
-        Volunteer volunteer = volunteerService.findVolunteerById(100L);
+        NotFoundException ex = assertThrows(NotFoundException.class, () -> volunteerService.findVolunteerById(100L));
 
-        assertThat(volunteer).isNull();
+        assertThat(ex.getMessage()).isEqualTo("존재하지 않는 봉사활동 공고입니다.");
     }
 
     @Test
     @DisplayName("봉사공고 삭제")
-    public void deleteVolunteer() {
+    public void deleteVolunteer() throws BadRequestException {
         when(volunteerService.deleteVolunteerById(1L)).thenReturn(mockVolunteer());
 
         Volunteer volunteer = volunteerService.deleteVolunteerById(1L);
@@ -67,13 +70,12 @@ class VolunteerServiceTest {
 
     @Test
     @DisplayName("없는 봉사공고 삭제 404")
-    public void deleteVolunteer_Not_Exist() {
-        when(volunteerService.deleteVolunteerById(6545423L)).thenReturn(null);
+    public void deleteVolunteer_Not_Exist() throws BadRequestException {
+        when(volunteerService.deleteVolunteerById(6545423L)).thenThrow(new BadRequestException("존재하지 않는 봉사활동 공고입니다."));
 
-        Volunteer volunteer = volunteerService.deleteVolunteerById(6545423L);
+        BadRequestException ex = assertThrows(BadRequestException.class, () -> volunteerService.deleteVolunteerById(6545423L));
 
-        verify(volunteerService, times(1)).deleteVolunteerById(6545423L);
-        assertThat(volunteer).isNull();
+        assertThat(ex.getMessage()).isEqualTo("존재하지 않는 봉사활동 공고입니다.");
     }
 
     private Volunteer mockVolunteer() {
