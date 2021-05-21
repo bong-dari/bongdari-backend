@@ -3,6 +3,7 @@ package com.usbridge.bongdari.controller;
 import com.usbridge.bongdari.controller.dto.VolunteerDto;
 import com.usbridge.bongdari.model.Volunteer;
 import com.usbridge.bongdari.service.VolunteerService;
+import exception.BadRequestException;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -44,12 +45,8 @@ public class VolunteerController {
     }
 
     @DeleteMapping("/volunteer/{id}")
-    public ResponseEntity<VolunteerDto> deleteVolunteer(@PathVariable Long id) {
+    public ResponseEntity<VolunteerDto> deleteVolunteer(@PathVariable Long id) throws BadRequestException {
         Volunteer volunteer = volunteerService.deleteVolunteerById(id);
-
-        if (volunteer == null) {
-            return ResponseEntity.badRequest().build();
-        }
 
         return ResponseEntity.ok(modelMapper.map(volunteer, VolunteerDto.class));
     }
