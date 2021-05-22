@@ -2,6 +2,7 @@ package com.usbridge.bongdari.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.usbridge.bongdari.controller.dto.BoardRequestDto;
+import com.usbridge.bongdari.exception.ResourceNotFoundException;
 import com.usbridge.bongdari.model.enums.Category;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,6 +20,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -80,5 +82,29 @@ public class BoardControllerTest {
                 .andExpect(jsonPath("$.category").value("TOGETHER"))
                 .andExpect(jsonPath("$.city").value("경기도"))
                 .andExpect(jsonPath("$.gu").value("화성시"));
+    }
+
+    @DisplayName("게시판 삭제")
+    @Test
+    void deleteBoard() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/board/4"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.capacity").value(12))
+                .andExpect(jsonPath("$.category").value("TOWN"))
+                .andExpect(jsonPath("$.contact").value("01044445555"))
+                .andExpect(jsonPath("$.details").value("4. 게시판 테스트입니다"))
+                .andExpect(jsonPath("$.startDate").value("2021-11-22"))
+                .andExpect(jsonPath("$.endDate").value("2021-12-22"))
+                .andExpect(jsonPath("$.city").value("경기도"))
+                .andExpect(jsonPath("$.gu").value("양평군"))
+                .andExpect(jsonPath("$.member.id").value(2L));
+    }
+
+    @DisplayName("게시판 삭제_게시판 존재 x")
+    @Test
+    void deleteBoard_ResourcesNotFound() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/board/15"))
+                .andExpect((exception) -> assertTrue(exception.getResolvedException().getClass().isAssignableFrom(ResourceNotFoundException.class)))
+                .andExpect(status().isNotFound());
     }
 }
