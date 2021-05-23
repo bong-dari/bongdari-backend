@@ -18,7 +18,6 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -42,7 +41,7 @@ public class BoardControllerTest {
                 .build();
     }
 
-    @DisplayName("게시판 조회")
+    @DisplayName("게시글 조회")
     @Test
     void getBoardList() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/board?category=TOWN&city=서울시&gu=강동구"))
@@ -52,7 +51,7 @@ public class BoardControllerTest {
                 .andExpect(jsonPath("$.content[0].gu").value("강동구"));
     }
 
-    @DisplayName("게시판 조회_city_gu_없을때")
+    @DisplayName("게시글 조회_city_gu_없을때")
     @Test
     void getBoardListNoCityAndGu() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/board?category=TOWN"))
@@ -61,7 +60,7 @@ public class BoardControllerTest {
                 .andExpect(jsonPath("$.content[0].city").value("서울시"));
     }
 
-    @DisplayName("게시판 등록")
+    @DisplayName("게시글 등록")
     @Test
     void createBoard() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/board")
@@ -73,7 +72,6 @@ public class BoardControllerTest {
                         .details("")
                         .startDate(LocalDate.of(2021, 5, 15))
                         .endDate(LocalDate.of(2021, 5, 20))
-                        .createdDate(LocalDateTime.of(2021, 5, 10, 13, 0))
                         .city("경기도")
                         .gu("화성시")
                         .build())))
@@ -84,7 +82,7 @@ public class BoardControllerTest {
                 .andExpect(jsonPath("$.gu").value("화성시"));
     }
 
-    @DisplayName("게시판 삭제")
+    @DisplayName("게시글 삭제")
     @Test
     void deleteBoard() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/board/4"))
@@ -100,10 +98,43 @@ public class BoardControllerTest {
                 .andExpect(jsonPath("$.member.id").value(2L));
     }
 
-    @DisplayName("게시판 삭제_게시판 존재 x")
+    @DisplayName("게시글 삭제_게시글 존재 x")
     @Test
     void deleteBoard_ResourcesNotFound() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/board/15"))
+                .andExpect((exception) -> assertTrue(exception.getResolvedException().getClass().isAssignableFrom(ResourceNotFoundException.class)))
+                .andExpect(status().isNotFound());
+    }
+
+    @DisplayName("게시글 수정")
+    @Test
+    void updateBoard() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/board")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(BoardRequestDto.builder()
+                        .id(1L)
+                        .capacity(11)
+                        .city("경기도")
+                        .gu("화성시")
+                        .build())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.capacity").value(11))
+                .andExpect(jsonPath("$.city").value("경기도"))
+                .andExpect(jsonPath("$.gu").value("화성시"));
+    }
+
+    @DisplayName("게시글 수정_게시글 존재 x")
+    @Test
+    void updateBoard_ResourceNotFound() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/board")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(BoardRequestDto.builder()
+                        .id(15L)
+                        .capacity(11)
+                        .city("경기도")
+                        .gu("화성시")
+                        .build())))
                 .andExpect((exception) -> assertTrue(exception.getResolvedException().getClass().isAssignableFrom(ResourceNotFoundException.class)))
                 .andExpect(status().isNotFound());
     }
