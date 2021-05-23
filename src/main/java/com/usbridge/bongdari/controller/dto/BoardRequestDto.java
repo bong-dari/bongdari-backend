@@ -16,11 +16,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BoardRequestDto {
+    private Long id;
     private int capacity;
     private String contact;
     private LocalDate startDate;
     private LocalDate endDate;
-    private LocalDateTime createdDate;
     private String details;
     private String city;
     private String gu;
@@ -32,7 +32,7 @@ public class BoardRequestDto {
                 .contact(contact)
                 .startDate(startDate)
                 .endDate(endDate)
-                .createdDate(createdDate)
+                .createdDate(LocalDateTime.now().withNano(0))
                 .details(details)
                 .city(city)
                 .gu(gu)
