@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.usbridge.bongdari.service.BoardService.setBoard;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -41,6 +43,8 @@ class BoardServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
+
+    @Mock private ModelMapper modelMapper;
 
     @DisplayName("게시글 리스트 조회")
     @Test
@@ -89,7 +93,7 @@ class BoardServiceTest {
 
         Board board = boardService.createBoard(1L, givenBoardRequestDto());
 
-        verify(boardRepository, times(1)).save(any(Board.class));
+        verify(boardRepository, times(1)).save(givenBoardRequestDto().toEntity(givenMember()));
         assertThat(board.getMember().getId()).isEqualTo(1L);
         assertThat(board.getCapacity()).isEqualTo(11);
         assertThat(board.getCity()).isEqualTo("경기도");
@@ -109,26 +113,72 @@ class BoardServiceTest {
 
     @DisplayName("게시글 삭제 (게시글 없음)")
     @Test
-    void deleteBoard_ResourcesNotFound() {
-        when(boardRepository.findById(1991L)).thenThrow(new ResourceNotFoundException("해당 id의 회원정보가 존재하지 않습니다."));
+    void deleteBoard_ResourceNotFound() {
+        when(boardRepository.findById(1991L)).thenThrow(new ResourceNotFoundException("해당 id의 게시글이 존재하지 않습니다."));
+
         ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> boardService.deleteBoardById(1991L));
 
-        assertThat(exception.getMessage()).isEqualTo("해당 id의 회원정보가 존재하지 않습니다.");
+        assertThat(exception.getMessage()).isEqualTo("해당 id의 게시글이 존재하지 않습니다.");
+    }
+
+    @DisplayName("게시글 수정")
+    @Test
+    void updateBoard() {
+        Board updateBoard = givenBoard();
+        setBoard(updateBoard, givenUpdateBoard());
+
+        when(boardRepository.findById(givenUpdateBoard().getId())).thenReturn(Optional.of(givenBoard()));
+        when(boardRepository.save(any(Board.class))).thenReturn(updateBoard);
+
+        Board board = boardService.updateBoard(givenUpdateBoard());
+
+        verify(boardRepository, times(1)).save(updateBoard);
+        assertThat(board.getCapacity()).isEqualTo(15);
+        assertThat(board.getCity()).isEqualTo("제주도");
+        assertThat(board.getGu()).isEqualTo("서귀포시");
+    }
+
+    @DisplayName("게시글 수정 (게시글 없음)")
+    @Test
+    void updateBoard_ResourceNotFound() {
+        when(boardRepository.findById(1L)).thenThrow(new ResourceNotFoundException("해당 id의 게시글이 존재하지 않습니다."));
+
+        ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> boardService.updateBoard(givenBoardRequestDto()));
+
+        assertThat(exception.getMessage()).isEqualTo("해당 id의 게시글이 존재하지 않습니다.");
+    }
+
+    private BoardRequestDto givenUpdateBoard() {
+        return BoardRequestDto.builder()
+                .capacity(15)
+                .city("제주도")
+                .gu("서귀포시")
+                .build();
     }
 
     private Board givenBoard(){
-        return givenBoardRequestDto().toEntity(Member.builder().id(1L).build());
+        return Board.builder()
+                .id(1L)
+                .capacity(3)
+                .category(Category.TOWN)
+                .contact("01011112222")
+                .details("1. 게시판 테스트입니다")
+                .startDate(LocalDate.of(2021, 5, 22))
+                .endDate(LocalDate.of(2021, 6, 22))
+                .city("서울시")
+                .gu("강동구")
+                .build();
     }
 
     private BoardRequestDto givenBoardRequestDto() {
         return BoardRequestDto.builder()
+                .id(1L)
                 .capacity(11)
                 .category(Category.TOGETHER)
                 .contact("01055556666")
-                .details("")
+                .details("게시판 수정 테스트 입니다")
                 .startDate(LocalDate.of(2021, 5, 15))
                 .endDate(LocalDate.of(2021, 5, 20))
-                .createdDate(LocalDateTime.of(2021, 5, 10, 13, 0))
                 .city("경기도")
                 .gu("화성시")
                 .build();
