@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,9 +43,15 @@ public class BoardService {
     }
 
     public Board deleteBoardById(Long id) {
-        Board board = boardRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("해당 id의 회원정보가 존재하지 않습니다."));
+        Board board = boardRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("해당 id의 게시글이 존재하지 않습니다."));
         boardRepository.delete(board);
         return board;
+    }
+
+    public Board updateBoard(BoardRequestDto boardRequestDto){
+        Board board = boardRepository.findById(boardRequestDto.getId()).orElseThrow(() -> new ResourceNotFoundException("해당 id의 게시글이 존재하지 않습니다."));
+        setBoard(board, boardRequestDto);
+        return boardRepository.save(board);
     }
 
     private Page<BoardResponseDto> boardPageToBoardResponseDtoPage(Page<Board> boardPage, Pageable pageable){
@@ -58,5 +65,17 @@ public class BoardService {
         int start = (int)pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), dtoList.size());
         return new PageImpl<>(dtoList.subList(start, end), pageable, dtoList.size());
+    }
+
+    static void setBoard(Board board, BoardRequestDto boardRequestDto){
+        board.setCapacity(boardRequestDto.getCapacity());
+        board.setContact(boardRequestDto.getContact());
+        board.setStartDate(boardRequestDto.getStartDate());
+        board.setEndDate(boardRequestDto.getEndDate());
+        board.setCreatedDate(LocalDateTime.now().withNano(0));
+        board.setDetails(boardRequestDto.getDetails());
+        board.setCity(boardRequestDto.getCity());
+        board.setGu(boardRequestDto.getGu());
+        board.setCategory(boardRequestDto.getCategory());
     }
 }
