@@ -11,13 +11,19 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.time.LocalDate;
 
-@Getter @Setter @AllArgsConstructor @NoArgsConstructor
-@Builder @EqualsAndHashCode(of = "id")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@EqualsAndHashCode(of = "id")
 @Entity
 public class Volunteer {
     @Id
@@ -46,4 +52,7 @@ public class Volunteer {
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Institution institution;
 }
