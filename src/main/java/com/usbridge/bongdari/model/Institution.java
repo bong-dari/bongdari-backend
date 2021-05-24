@@ -4,7 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 public class Institution {
@@ -34,4 +36,6 @@ public class Institution {
 
     private LocalDate createdDate;
 
+    @OneToMany(mappedBy = "institution")
+    private List<Volunteer> volunteers;
 }
