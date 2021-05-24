@@ -24,6 +24,12 @@ public class VolunteerDto {
     private String details;
 
     @NotEmpty
+    private String city;
+
+    @NotEmpty
+    private String gu;
+
+    @NotEmpty
     private String location;
 
     @NotEmpty
