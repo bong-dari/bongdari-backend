@@ -2,8 +2,12 @@ package com.usbridge.bongdari.repository.querydsl;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.usbridge.bongdari.model.Volunteer;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
 
 import static com.usbridge.bongdari.model.QVolunteer.volunteer;
 
@@ -11,6 +15,10 @@ import static com.usbridge.bongdari.model.QVolunteer.volunteer;
 @Repository
 public class VolunteerQueryRepository {
     private final JPAQueryFactory jpaQueryFactory;
+
+    public Page<Volunteer> getVolunteersBySearch(LocalDate startDate, LocalDate endDate, Integer capacity, String city, String gu, String searchKeyword) {
+        return null;
+    }
 
     private BooleanExpression eqCity(String city) {
         if (city == null) {
