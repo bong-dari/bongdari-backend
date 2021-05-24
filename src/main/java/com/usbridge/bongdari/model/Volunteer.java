@@ -34,6 +34,10 @@ public class Volunteer {
 
     private String details;
 
+    private String city;
+
+    private String gu;
+
     private String location;
 
     private String time;
