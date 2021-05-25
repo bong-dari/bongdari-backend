@@ -1,10 +1,13 @@
 package com.usbridge.bongdari.repository.querydsl;
 
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.usbridge.bongdari.model.Volunteer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -16,8 +19,15 @@ import static com.usbridge.bongdari.model.QVolunteer.volunteer;
 public class VolunteerQueryRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
-    public Page<Volunteer> getVolunteersBySearch(LocalDate startDate, LocalDate endDate, Integer capacity, String city, String gu, String searchKeyword) {
-        return null;
+    public Page<Volunteer> getVolunteersBySearch(LocalDate date, Integer capacity, String city, String gu, String searchKeyword, Pageable page) {
+        QueryResults<Volunteer> volunteers = jpaQueryFactory
+                .selectFrom(volunteer)
+                .where(eqCity(city), eqGu(gu), includeDate(date), goeCapacity(capacity), containsSearchKeywordAtTitle(searchKeyword))
+                .offset(page.getOffset())
+                .limit(page.getPageSize())
+                .fetchResults();
+
+        return new PageImpl<>(volunteers.getResults(), page, volunteers.getTotal());
     }
 
     private BooleanExpression eqCity(String city) {
