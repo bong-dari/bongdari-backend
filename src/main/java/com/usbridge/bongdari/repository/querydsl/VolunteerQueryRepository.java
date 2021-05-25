@@ -33,4 +33,11 @@ public class VolunteerQueryRepository {
         }
         return volunteer.gu.eq(gu);
     }
+
+    private BooleanExpression includeDate(LocalDate date) {
+        if (date == null) {
+            return null;
+        }
+        return volunteer.startDate.goe(date).and(volunteer.endDate.lt(date));
+    }
 }
