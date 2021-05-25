@@ -47,4 +47,11 @@ public class VolunteerQueryRepository {
         }
         return volunteer.capacity.goe(capacity);
     }
+
+    private BooleanExpression containsSearchKeywordAtTitle(String searchKeyword) {
+        if (searchKeyword == null) {
+            return null;
+        }
+        return volunteer.title.contains(searchKeyword);
+    }
 }
