@@ -40,4 +40,11 @@ public class VolunteerQueryRepository {
         }
         return volunteer.startDate.loe(date).and(volunteer.endDate.goe(date));
     }
+
+    private BooleanExpression goeCapacity(Integer capacity) {
+        if (capacity == null) {
+            return null;
+        }
+        return volunteer.capacity.goe(capacity);
+    }
 }
