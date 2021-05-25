@@ -35,4 +35,13 @@ class VolunteerQueryRepositoryTest {
 
         assertThat(volunteers.getTotalElements()).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("봉사활동 공고 가져오기 (인원)")
+    public void getVolunteersBySearch_Capacity() {
+        Page<Volunteer> volunteers = volunteerQueryRepository.getVolunteersBySearch(null, 20, null,
+                null, null, PageRequest.of(0, 20));
+
+        assertThat(volunteers.getTotalElements()).isEqualTo(3);
+    }
 }
