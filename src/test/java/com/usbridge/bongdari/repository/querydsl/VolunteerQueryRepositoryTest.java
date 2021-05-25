@@ -26,4 +26,13 @@ class VolunteerQueryRepositoryTest {
 
         assertThat(volunteers.getTotalElements()).isEqualTo(3);
     }
+
+    @Test
+    @DisplayName("봉사활동 공고 가져오기 (날짜)")
+    public void getVolunteersBySearch_Date() {
+        Page<Volunteer> volunteers = volunteerQueryRepository.getVolunteersBySearch(LocalDate.of(2021, 5, 11), null, null,
+                null, null, PageRequest.of(0, 20));
+
+        assertThat(volunteers.getTotalElements()).isEqualTo(1);
+    }
 }
