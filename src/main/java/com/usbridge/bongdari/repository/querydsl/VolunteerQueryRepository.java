@@ -38,6 +38,6 @@ public class VolunteerQueryRepository {
         if (date == null) {
             return null;
         }
-        return volunteer.startDate.goe(date).and(volunteer.endDate.lt(date));
+        return volunteer.startDate.loe(date).and(volunteer.endDate.goe(date));
     }
 }
