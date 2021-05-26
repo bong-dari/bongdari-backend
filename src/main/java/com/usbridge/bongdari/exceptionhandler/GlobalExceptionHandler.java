@@ -1,7 +1,7 @@
 package com.usbridge.bongdari.exceptionhandler;
 
-import exception.BadRequestException;
-import javassist.NotFoundException;
+import com.usbridge.bongdari.exception.BadRequestException;
+import com.usbridge.bongdari.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(NotFoundException.class)
+    @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<?> handleNotFoundException(NotFoundException ex) {
+    public ResponseEntity<?> handleNotFoundException(ResourceNotFoundException ex) {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
