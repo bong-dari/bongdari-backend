@@ -1,13 +1,19 @@
 package com.usbridge.bongdari.model;
 
 import com.usbridge.bongdari.model.enums.Category;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+@Builder
+@Data
+@RequiredArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Board {
     @Id
@@ -22,7 +28,18 @@ public class Board {
 
     private LocalDate endDate;
 
+    private LocalDateTime createdDate;
+
     private String details;
 
+    private String city;
+
+    private String gu;
+
+    @Enumerated(EnumType.STRING)
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
 }
