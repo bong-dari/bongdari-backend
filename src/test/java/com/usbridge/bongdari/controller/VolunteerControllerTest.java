@@ -14,11 +14,13 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.time.LocalDate;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -26,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 class VolunteerControllerTest {
@@ -137,6 +140,29 @@ class VolunteerControllerTest {
                 .accept(MediaTypes.HAL_JSON))
                 .andExpect(status().isBadRequest());
 
+    }
+
+    @Test
+    @DisplayName("봉사공고 검색 (시)")
+    public void findVolunteers_city() throws Exception {
+        mockMvc.perform(get("/api/volunteers?city=서울특별시")
+                .content(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaTypes.HAL_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(3)))
+                .andExpect(jsonPath("$.content[0].city").value("서울특별시"));
+    }
+
+    @Test
+    @DisplayName("봉사공고 검색 (시, 구)")
+    public void findVolunteers_city_gu() throws Exception {
+        mockMvc.perform(get("/api/volunteers?city=서울특별시&gu=마포구")
+                .content(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaTypes.HAL_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].city").value("서울특별시"))
+                .andExpect(jsonPath("$.content[0].gu").value("마포구"));
     }
 
     private VolunteerDto givenVolunteerDto() {
