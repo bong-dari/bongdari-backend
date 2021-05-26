@@ -54,6 +54,8 @@ public class Volunteer {
 
     private LocalDate createdDate;
 
+    private LocalDate deadline;
+
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
