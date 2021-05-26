@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Transactional
 @RequiredArgsConstructor
 @Service
 public class BoardService {
@@ -36,18 +35,21 @@ public class BoardService {
         return boardPageToBoardResponseDtoPage(boardPage, pageable);
     }
 
+    @Transactional
     public Board createBoard(Long exToken, BoardRequestDto dto){
         // 인증 기능 완성되면 토큰받아 멤버 불러오는 코드 추가 예정
         Member member = memberRepository.findById(exToken).orElseThrow(() -> new ResourceNotFoundException("해당 id의 회원정보가 존재하지 않습니다."));
         return boardRepository.save(dto.toEntity(member));
     }
 
+    @Transactional
     public Board deleteBoardById(Long id) {
         Board board = boardRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("해당 id의 게시글이 존재하지 않습니다."));
         boardRepository.delete(board);
         return board;
     }
 
+    @Transactional
     public Board updateBoard(BoardRequestDto boardRequestDto){
         Board board = boardRepository.findById(boardRequestDto.getId()).orElseThrow(() -> new ResourceNotFoundException("해당 id의 게시글이 존재하지 않습니다."));
         setBoard(board, boardRequestDto);
