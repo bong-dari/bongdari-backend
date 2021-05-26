@@ -1,7 +1,10 @@
 package com.usbridge.bongdari.controller.dto;
 
+import lombok.Data;
+
 import java.time.LocalDate;
 
+@Data
 public class VolunteerSearchDto {
     private long id;
 
