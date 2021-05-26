@@ -62,9 +62,7 @@ public class BoardService {
             dtoList.add(new BoardResponseDto(board));
         }
 
-        int start = (int)pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), dtoList.size());
-        return new PageImpl<>(dtoList.subList(start, end), pageable, dtoList.size());
+        return new PageImpl<>(dtoList, pageable, dtoList.size());
     }
 
     static void setBoard(Board board, BoardRequestDto boardRequestDto){
