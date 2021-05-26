@@ -17,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -43,8 +42,6 @@ class BoardServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
-
-    @Mock private ModelMapper modelMapper;
 
     @DisplayName("게시글 리스트 조회")
     @Test
