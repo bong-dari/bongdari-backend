@@ -18,7 +18,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().disable()
                 .and()
                 .authorizeRequests()
-                .anyRequest().permitAll()
+                .anyRequest().permitAll()       // 나중에 인증 전용으로 바꿔야함.
                 .and()
                 .logout()
                 .logoutSuccessUrl("/")
