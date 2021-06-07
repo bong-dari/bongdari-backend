@@ -187,11 +187,10 @@ class BoardServiceTest {
                 .name("임정우")
                 .nickname("jeongwoolim")
                 .email("jwlimtest@gmail.com")
-                .contact("01066075331")
+                .mobile("01066075331")
                 .smsAgreement(true)
                 .isDeleted(false)
                 .birthDate(LocalDate.of(1991, 3, 1))
-                .createdDate(LocalDate.of(2021, 2, 15))
                 .gender(Gender.MALE)
                 .sns(SNS.KAKAO)
                 .build();
