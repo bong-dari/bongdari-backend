@@ -47,11 +47,8 @@ public class OAuthAttributes {
     }
 
     private static OAuthAttributes ofKakao(String userNameAttributeName, Map<String, Object> attributes) {
-        System.out.println("attributes" + attributes);
         Map<String, Object> response = (Map<String, Object>) attributes.get("kakao_account");
-        System.out.println("response : " + response);
         Map<String, Object> profile = (Map<String, Object>) response.get("profile");
-        System.out.println("profile : " + profile);
         return OAuthAttributes.builder()
                 .name((String) profile.get("nickname"))
                 .email((String) response.get("email"))
@@ -66,9 +63,9 @@ public class OAuthAttributes {
 
     private static Gender attributeToGender(String genderAttribute){
         Gender gen = Gender.ALL;
-        if(genderAttribute.equals("M")){
+        if(genderAttribute.equals("M") || genderAttribute.equals("male")){
             gen = Gender.MALE;
-        } else if(genderAttribute.equals("F")){
+        } else if(genderAttribute.equals("F") || genderAttribute.equals("female")){
             gen = Gender.FEMALE;
         }
         return gen;
