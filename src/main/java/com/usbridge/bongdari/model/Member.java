@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Entity
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class Member {
+public class Member extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -51,6 +51,15 @@ public class Member {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+    public Member update (String name, String email, String mobile, LocalDate birthDate, Gender gender){
+        this.name = name;
+        this.email = email;
+        this.mobile = mobile;
+        this.birthDate = birthDate;
+        this.gender = gender;
+        return this;
+    }
 
     public String getRoleKey() {
         return this.role.getKey();
