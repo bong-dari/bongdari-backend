@@ -8,14 +8,13 @@ import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Builder
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Board {
+public class Board extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,8 +26,6 @@ public class Board {
     private LocalDate startDate;
 
     private LocalDate endDate;
-
-    private LocalDateTime createdDate;
 
     private String details;
 
