@@ -9,7 +9,6 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 @Builder
 @Getter
@@ -39,23 +38,26 @@ public class OAuthAttributes {
                 .name((String) response.get("name"))
                 .email((String) response.get("email"))
                 .gender(attributeToGender((String) response.get("gender")))
-                .birthDate(attributeToBirthDate((String) response.get("birthyear"), (String) response.get("birthday")))
+                .birthDate(attributeToBirthDate((String) response.get("birthyear"), ((String) response.get("birthday")).replace("-", "")))
                 .mobile((String) response.get("mobile"))
                 .sns(SNS.NAVER)
-                .attributes(attributes)
+                .attributes(response)
                 .nameAttributeKey(userNameAttributeName)
                 .build();
     }
 
     private static OAuthAttributes ofKakao(String userNameAttributeName, Map<String, Object> attributes) {
-        Map<String, Object> response = (Map<String, Object>) attributes.get("kakao-account");
+        System.out.println("attributes" + attributes);
+        Map<String, Object> response = (Map<String, Object>) attributes.get("kakao_account");
+        System.out.println("response : " + response);
         Map<String, Object> profile = (Map<String, Object>) response.get("profile");
+        System.out.println("profile : " + profile);
         return OAuthAttributes.builder()
-                .name()
-                .email()
-                .gender()
-                .birthDate()
-                .mobile()
+                .name((String) profile.get("nickname"))
+                .email((String) response.get("email"))
+                .gender(Gender.ALL)
+                .birthDate(LocalDate.now())
+                .mobile("")
                 .sns(SNS.KAKAO)
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
@@ -72,10 +74,12 @@ public class OAuthAttributes {
         return gen;
     }
 
-    private static LocalDate attributeToBirthDate(String birthYear, String birthDay, SNS sns){
-        StringTokenizer st = new StringTokenizer(birthDay, "-");
-        int month = sns == SNS.NAVER ? Integer.parseInt(st.nextToken()) : ;
-        return LocalDate.of(Integer.parseInt(birthYear), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+    private static LocalDate attributeToBirthDate(String birthYear, String birthDay){
+        return LocalDate.of(
+                Integer.parseInt(birthYear),
+                Integer.parseInt(birthDay.substring(0, 2)),
+                Integer.parseInt(birthDay.substring(2))
+        );
     }
 
     public Member toEntity(){
