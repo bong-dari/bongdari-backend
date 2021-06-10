@@ -1,6 +1,7 @@
 package com.usbridge.bongdari.model;
 
 import com.usbridge.bongdari.model.enums.Gender;
+import com.usbridge.bongdari.model.enums.Role;
 import com.usbridge.bongdari.model.enums.SNS;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,30 +16,52 @@ import java.time.LocalDate;
 @Entity
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class Member {
+public class Member extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
     private String nickname;
 
+    @Column(nullable = false)
     private String email;
 
-    private String contact;
+    @Column(nullable = false)
+    private String mobile;
 
     private Boolean smsAgreement;
 
+    @Column(nullable = false)
     private Boolean isDeleted;
 
+    @Column(nullable = false)
     private LocalDate birthDate;
 
-    private LocalDate createdDate;
-
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Gender gender;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private SNS sns;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
+    public Member update (String name, String email, String mobile, LocalDate birthDate, Gender gender){
+        this.name = name;
+        this.email = email;
+        this.mobile = mobile;
+        this.birthDate = birthDate;
+        this.gender = gender;
+        return this;
+    }
+
+    public String getRoleKey() {
+        return this.role.getKey();
+    }
 }
