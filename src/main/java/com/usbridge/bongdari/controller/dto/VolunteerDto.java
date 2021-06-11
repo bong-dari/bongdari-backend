@@ -16,6 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VolunteerDto {
+    private Long id;
 
     @NotEmpty
     private String title;
