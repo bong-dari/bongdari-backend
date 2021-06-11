@@ -108,6 +108,18 @@ class VolunteerServiceTest {
         assertThat(volunteerSearchDtos.getTotalElements()).isEqualTo(10);
     }
 
+    @Test
+    @DisplayName("봉사공고 수정")
+    public void modifyVolunteer() {
+        when(volunteerRepository.findById(1L)).thenReturn(Optional.of(mockVolunteer(1L)));
+
+        VolunteerDto volunteerDto = mockVolunteerDto();
+        volunteerDto.setId(1L);
+        Volunteer volunteer = volunteerService.modifyVolunteer(volunteerDto);
+
+        assertThat(volunteer.getCapacity()).isEqualTo(10);
+    }
+
     private Volunteer mockVolunteer(long id) {
         return Volunteer.builder()
                 .id(id)
@@ -116,13 +128,14 @@ class VolunteerServiceTest {
                 .time("오전10시부터")
                 .contact("010-1234-5678")
                 .capacity(10)
+                .city("서울특별시")
+                .gu("마포구")
                 .gender(Gender.ALL)
                 .location("마포구")
                 .manager("이재복")
                 .startDate(LocalDate.of(2050, 5, 1))
                 .endDate(LocalDate.of(2020, 5, 10))
                 .createdDate(LocalDate.of(2020, 5, 10))
-                .deadline(LocalDate.of(2020, 4, 20))
                 .build();
     }
 
@@ -134,6 +147,8 @@ class VolunteerServiceTest {
                 .contact("010-1234-5678")
                 .capacity(10)
                 .gender(Gender.ALL)
+                .city("서울특별시")
+                .gu("마포구")
                 .location("마포구")
                 .manager("이재복")
                 .startDate(LocalDate.of(2050, 5, 1))
