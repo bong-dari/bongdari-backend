@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -73,6 +74,14 @@ public class VolunteerController {
     @DeleteMapping("/volunteer/{id}")
     public ResponseEntity<VolunteerDto> deleteVolunteer(@PathVariable Long id) throws BadRequestException {
         Volunteer volunteer = volunteerService.deleteVolunteerById(id);
+
+        return ResponseEntity.ok(modelMapper.map(volunteer, VolunteerDto.class));
+    }
+
+    @PutMapping("/volunteer")
+    public ResponseEntity<VolunteerDto> putVolunteer(@RequestBody @Valid VolunteerDto volunteerDto) {
+
+        Volunteer volunteer = volunteerService.modifyVolunteer(volunteerDto);
 
         return ResponseEntity.ok(modelMapper.map(volunteer, VolunteerDto.class));
     }
