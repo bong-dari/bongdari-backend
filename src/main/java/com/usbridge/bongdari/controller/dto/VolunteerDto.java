@@ -16,12 +16,19 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VolunteerDto {
+    private Long id;
 
     @NotEmpty
     private String title;
 
     @NotEmpty
     private String details;
+
+    @NotEmpty
+    private String city;
+
+    @NotEmpty
+    private String gu;
 
     @NotEmpty
     private String location;

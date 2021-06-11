@@ -14,18 +14,22 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.time.LocalDate;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 class VolunteerControllerTest {
@@ -68,7 +72,9 @@ class VolunteerControllerTest {
                 .contact("010-1234-5678")
                 .capacity(10)
                 .gender(Gender.ALL)
-                .location("마포구")
+                .city("서울특별시")
+                .gu("마포구")
+                .location("마포아트센터")
                 .manager("이재복")
                 .startDate(LocalDate.of(2050, 5, 1))
                 .endDate(LocalDate.of(2020, 5, 10))
@@ -137,6 +143,53 @@ class VolunteerControllerTest {
 
     }
 
+    @Test
+    @DisplayName("봉사공고 검색 (시)")
+    public void findVolunteers_city() throws Exception {
+        mockMvc.perform(get("/api/volunteers?city=서울특별시")
+                .content(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaTypes.HAL_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(3)))
+                .andExpect(jsonPath("$.content[0].city").value("서울특별시"));
+    }
+
+    @Test
+    @DisplayName("봉사공고 검색 (시, 구)")
+    public void findVolunteers_city_gu() throws Exception {
+        mockMvc.perform(get("/api/volunteers?city=서울특별시&gu=마포구")
+                .content(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaTypes.HAL_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].city").value("서울특별시"))
+                .andExpect(jsonPath("$.content[0].gu").value("마포구"));
+    }
+
+    @Test
+    @DisplayName("봉사공고 수정")
+    public void modifyVolunteer() throws Exception {
+        mockMvc.perform(put("/api/volunteer")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaTypes.HAL_JSON)
+                .content(objectMapper.writeValueAsString(VolunteerDtoWithId())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.city").value("성남시"))
+                .andExpect(jsonPath("$.gu").value("분당구"))
+                .andExpect(jsonPath("$.contact").value("010-0000-0000"))
+                .andExpect(jsonPath("$.capacity").value(10));
+    }
+
+    @Test
+    @DisplayName("봉사공고 수정 (id null)")
+    public void modifyVolunteer_id_null() throws Exception {
+        mockMvc.perform(put("/api/volunteer")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaTypes.HAL_JSON)
+                .content(objectMapper.writeValueAsString(givenVolunteerDto())))
+                .andExpect(status().isBadRequest());
+    }
+
     private VolunteerDto givenVolunteerDto() {
         return VolunteerDto.builder()
                 .title("봉사 활동")
@@ -145,7 +198,27 @@ class VolunteerControllerTest {
                 .contact("010-1234-5678")
                 .capacity(10)
                 .gender(Gender.ALL)
-                .location("마포구")
+                .city("서울특별시")
+                .gu("마포구")
+                .location("마포아트센터")
+                .manager("이재복")
+                .startDate(LocalDate.of(2050, 5, 1))
+                .endDate(LocalDate.of(2020, 5, 10))
+                .build();
+    }
+
+    private VolunteerDto VolunteerDtoWithId() {
+        return VolunteerDto.builder()
+                .id(1L)
+                .title("봉사 활동")
+                .details("봉사하기")
+                .time("오전10시부터")
+                .contact("010-0000-0000")
+                .capacity(10)
+                .gender(Gender.ALL)
+                .city("성남시")
+                .gu("분당구")
+                .location("분당아트센터")
                 .manager("이재복")
                 .startDate(LocalDate.of(2050, 5, 1))
                 .endDate(LocalDate.of(2020, 5, 10))
