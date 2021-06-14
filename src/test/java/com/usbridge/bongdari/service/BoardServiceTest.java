@@ -7,6 +7,7 @@ import com.usbridge.bongdari.model.Board;
 import com.usbridge.bongdari.model.Member;
 import com.usbridge.bongdari.model.enums.Category;
 import com.usbridge.bongdari.model.enums.Gender;
+import com.usbridge.bongdari.model.enums.Role;
 import com.usbridge.bongdari.model.enums.SNS;
 import com.usbridge.bongdari.repository.BoardRepository;
 import com.usbridge.bongdari.repository.MemberRepository;
@@ -22,7 +23,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -85,12 +85,16 @@ class BoardServiceTest {
     @DisplayName("게시글 등록")
     @Test
     void createBoard() {
-        when(memberRepository.findById(1L)).thenReturn(Optional.of(givenMember()));
-        when(boardRepository.save(givenBoardRequestDto().toEntity(givenMember()))).thenReturn(givenBoardRequestDto().toEntity(givenMember()));
+        Member member = givenMember();
+        BoardRequestDto dto = givenBoardRequestDto();
+        Board givenboard = dto.toEntity(member);
+
+        when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
+        when(boardRepository.save(dto.toEntity(member))).thenReturn(givenboard);
 
         Board board = boardService.createBoard(1L, givenBoardRequestDto());
 
-        verify(boardRepository, times(1)).save(givenBoardRequestDto().toEntity(givenMember()));
+        verify(boardRepository, times(1)).save(board);
         assertThat(board.getMember().getId()).isEqualTo(1L);
         assertThat(board.getCapacity()).isEqualTo(11);
         assertThat(board.getCity()).isEqualTo("경기도");
@@ -193,6 +197,7 @@ class BoardServiceTest {
                 .birthDate(LocalDate.of(1991, 3, 1))
                 .gender(Gender.MALE)
                 .sns(SNS.KAKAO)
+                .role(Role.MEMBER)
                 .build();
     }
 
@@ -206,7 +211,6 @@ class BoardServiceTest {
                     .capacity(3)
                     .startDate(LocalDate.now())
                     .endDate(LocalDate.now())
-                    .createdDate(LocalDateTime.now())
                     .details("")
                     .city("서울시")
                     .gu("강동구")
