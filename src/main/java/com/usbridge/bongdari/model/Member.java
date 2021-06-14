@@ -5,14 +5,14 @@ import com.usbridge.bongdari.model.enums.Role;
 import com.usbridge.bongdari.model.enums.SNS;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Builder
-@Data
+@Getter
 @Entity
 @RequiredArgsConstructor
 @AllArgsConstructor
