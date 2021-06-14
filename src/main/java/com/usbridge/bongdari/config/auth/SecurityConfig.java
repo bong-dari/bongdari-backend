@@ -16,12 +16,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .headers().frameOptions().disable()
+
                 .and()
                 .authorizeRequests()
-                .anyRequest().permitAll()       // 나중에 인증 전용으로 바꿔야함.
+                .antMatchers("/login", "/login/volunteer", "/login/institution").permitAll()
+//                .antMatchers("/api/member/**").hasRole(Role.MEMBER.name())    // 나중에 바꿔야함
+                .anyRequest().authenticated()
+
                 .and()
                 .logout()
-                .logoutSuccessUrl("/")
+                .logoutSuccessUrl("/login")
+
                 .and()
                 .oauth2Login()
                 .userInfoEndpoint()
