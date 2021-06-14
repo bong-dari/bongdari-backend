@@ -10,6 +10,7 @@ import java.time.LocalDate;
 
 @Getter
 public class SessionMember implements Serializable {
+    private Long id;
     private String name;
     private String nickname;
     private String email;
@@ -20,6 +21,7 @@ public class SessionMember implements Serializable {
     private SNS sns;
 
     public SessionMember(Member member){
+        this.id = member.getId();
         this.name = member.getName();
         this.nickname = member.getNickname();
         this.email = member.getEmail();
