@@ -19,7 +19,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/login", "/login/volunteer", "/login/institution").permitAll()
+                .antMatchers("/", "/login", "/login/volunteer", "/login/institution").permitAll()
 //                .antMatchers("/api/member/**").hasRole(Role.MEMBER.name())    // 나중에 바꿔야함
                 .anyRequest().authenticated()
 
