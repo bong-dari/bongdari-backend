@@ -1,16 +1,15 @@
 package com.usbridge.bongdari.model;
 
 import com.usbridge.bongdari.model.enums.Category;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Builder
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = false)
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Entity
