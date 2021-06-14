@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -32,7 +31,6 @@ public class BoardRequestDto {
                 .contact(contact)
                 .startDate(startDate)
                 .endDate(endDate)
-                .createdDate(LocalDateTime.now().withNano(0))
                 .details(details)
                 .city(city)
                 .gu(gu)
