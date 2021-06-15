@@ -1,5 +1,6 @@
 package com.usbridge.bongdari.config.auth;
 
+import com.usbridge.bongdari.model.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,7 +21,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/", "/login", "/login/volunteer", "/login/institution").permitAll()
-//                .antMatchers("/api/member/**").hasRole(Role.MEMBER.name())    // 나중에 바꿔야함
+                .antMatchers("/api/**").hasRole(Role.MEMBER.name())    // 나중에 바꿔야함
                 .anyRequest().authenticated()
 
                 .and()
