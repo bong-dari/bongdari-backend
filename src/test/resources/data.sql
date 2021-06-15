@@ -1,9 +1,9 @@
 -- Member Data
-insert into member(id, nickname, name, sms_agreement, birth_date, contact, created_date, email, gender, is_deleted, sns) values (
-    null, 'jeongwoolim', '임정우', true, '1991-03-01', '01066075331', '2021-02-23', 'jwlimtest@gmail.com', 'MALE', false, 'KAKAO'
+insert into member(id, nickname, name, sms_agreement, birth_date, mobile, email, gender, is_deleted, sns, role) values (
+    null, 'jeongwoolim', '임정우', true, '1991-03-01', '01066075331', 'jwlimtest@gmail.com', 'MALE', false, 'KAKAO', 'MEMBER'
 );
-insert into member(id, nickname, name, sms_agreement, birth_date, contact, created_date, email, gender, is_deleted, sns) values (
-    null, 'jaeboklee', '이재복', false, '1993-12-25', '01099535609', '2021-03-14', 'jbleetest@gmail.com', 'MALE', false, 'NAVER'
+insert into member(id, nickname, name, sms_agreement, birth_date, mobile, email, gender, is_deleted, sns, role) values (
+    null, 'jaeboklee', '이재복', false, '1993-12-25', '01099535609', 'jbleetest@gmail.com', 'MALE', false, 'NAVER', 'MEMBER'
 );
 
 -- Board Data
