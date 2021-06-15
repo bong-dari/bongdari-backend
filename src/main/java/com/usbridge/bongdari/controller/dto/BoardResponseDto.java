@@ -22,6 +22,7 @@ public class BoardResponseDto {
     private LocalDate startDate;
     private LocalDate endDate;
     private LocalDateTime createdDate;
+    private LocalDateTime modifiedDate;
     private int capacity;
     private String city;
     private String gu;
@@ -33,7 +34,8 @@ public class BoardResponseDto {
         this.details = board.getDetails();
         this.startDate = board.getStartDate();
         this.endDate = board.getEndDate();
-        this.createdDate = board.getCreatedDate();
+        this.createdDate = board.getCreatedDate().withNano(0);
+        this.modifiedDate = board.getModifiedDate().withNano(0);
         this.capacity = board.getCapacity();
         this.city = board.getCity();
         this.gu = board.getGu();
