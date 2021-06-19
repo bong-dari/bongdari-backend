@@ -5,7 +5,7 @@ import lombok.*;
 @Getter
 @Builder
 @NoArgsConstructor
-public class MemberUpdateDto {
+public class MemberDto {
     private String nickname;
     private String mobile;
     private Boolean smsAgreement;
