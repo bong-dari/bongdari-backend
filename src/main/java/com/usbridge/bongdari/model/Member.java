@@ -52,12 +52,19 @@ public class Member extends BaseTimeEntity{
     @Column(nullable = false)
     private Role role;
 
-    public Member update (String name, String email, String mobile, LocalDate birthDate, Gender gender){
+    public Member loginUpdate(String name, String email, String mobile, LocalDate birthDate, Gender gender){
         this.name = name;
         this.email = email;
         this.mobile = mobile;
         this.birthDate = birthDate;
         this.gender = gender;
+        return this;
+    }
+
+    public Member update(String nickname, String mobile, Boolean smsAgreement){
+        this.nickname = nickname != null ? nickname : this.nickname;
+        this.mobile = mobile != null ? mobile : this.mobile;
+        this.smsAgreement = smsAgreement != null ? smsAgreement : this.smsAgreement;
         return this;
     }
 
