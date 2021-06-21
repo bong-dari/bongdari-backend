@@ -52,10 +52,10 @@ public class Member extends BaseTimeEntity{
     @Column(nullable = false)
     private Role role;
 
-    public Member loginUpdate(String name, String email, String mobile, LocalDate birthDate, Gender gender){
+    public Member loginUpdate(String name, String email, LocalDate birthDate, Gender gender){
         this.name = name;
         this.email = email;
-        this.mobile = mobile;
+//        this.mobile = mobile;
         this.birthDate = birthDate;
         this.gender = gender;
         return this;
