@@ -21,6 +21,6 @@ public class MemberController {
 
     @PatchMapping("/member")
     public ResponseEntity<Member> updateMember(@LoginMember SessionMember member, @RequestBody MemberDto requestDto){
-        return ResponseEntity.ok(memberService.update(member.getId(), requestDto));
+        return ResponseEntity.ok(memberService.updateMember(member.getId(), requestDto));
     }
 }
