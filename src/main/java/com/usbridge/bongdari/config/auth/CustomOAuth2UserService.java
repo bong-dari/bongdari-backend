@@ -50,7 +50,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 .map(entity -> entity.loginUpdate(
                         attributes.getName(),
                         attributes.getEmail(),
-                        attributes.getMobile(),
+//                        attributes.getMobile(),
                         attributes.getBirthDate(),
                         attributes.getGender())
                 )
