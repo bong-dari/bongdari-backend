@@ -72,7 +72,7 @@ public class VolunteerController {
     }
 
     @DeleteMapping("/volunteer/{id}")
-    public ResponseEntity<VolunteerDto> deleteVolunteer(@PathVariable Long id) throws BadRequestException {
+    public ResponseEntity<VolunteerDto> deleteVolunteer(@PathVariable Long id) {
         Volunteer volunteer = volunteerService.deleteVolunteerById(id);
 
         return ResponseEntity.ok(modelMapper.map(volunteer, VolunteerDto.class));
