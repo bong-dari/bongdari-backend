@@ -1,21 +1,19 @@
 package com.usbridge.bongdari.model;
 
 import com.usbridge.bongdari.model.enums.Category;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Builder
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = false)
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Board {
+public class Board extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,8 +25,6 @@ public class Board {
     private LocalDate startDate;
 
     private LocalDate endDate;
-
-    private LocalDateTime createdDate;
 
     private String details;
 
