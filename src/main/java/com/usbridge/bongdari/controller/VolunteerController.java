@@ -2,7 +2,6 @@ package com.usbridge.bongdari.controller;
 
 import com.usbridge.bongdari.controller.dto.VolunteerDto;
 import com.usbridge.bongdari.controller.dto.VolunteerSearchDto;
-import com.usbridge.bongdari.exception.BadRequestException;
 import com.usbridge.bongdari.model.Volunteer;
 import com.usbridge.bongdari.service.VolunteerService;
 import lombok.RequiredArgsConstructor;
@@ -72,7 +71,7 @@ public class VolunteerController {
     }
 
     @DeleteMapping("/volunteer/{id}")
-    public ResponseEntity<VolunteerDto> deleteVolunteer(@PathVariable Long id) throws BadRequestException {
+    public ResponseEntity<VolunteerDto> deleteVolunteer(@PathVariable Long id) {
         Volunteer volunteer = volunteerService.deleteVolunteerById(id);
 
         return ResponseEntity.ok(modelMapper.map(volunteer, VolunteerDto.class));
